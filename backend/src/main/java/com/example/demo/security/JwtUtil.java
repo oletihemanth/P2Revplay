@@ -17,7 +17,6 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // Pulls the secret key from your application.properties file
     @Value("${jwt.secret}")
     private String secret;
 
@@ -29,6 +28,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    // Extract username from token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
