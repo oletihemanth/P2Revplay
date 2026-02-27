@@ -22,7 +22,7 @@ public class CurationService {
     private final FollowedPlaylistRepository followedPlaylistRepository;
     private final UserRepository userRepository;
     private final SongRepository songRepository;
-    private final FileStorageService fileStorageService; // 🌟 NEW: Inject FileStorageService
+    private final FileStorageService fileStorageService; //  NEW: Inject FileStorageService
 
     public CurationService(FavoriteRepository favoriteRepository, PlaylistRepository playlistRepository,
                            PlaylistSongRepository playlistSongRepository, FollowedPlaylistRepository followedPlaylistRepository,
@@ -221,7 +221,7 @@ public class CurationService {
         response.setDescription(playlist.getDescription());
         response.setPrivacy(playlist.getPrivacy());
         response.setCreatorName(playlist.getUser().getName());
-        response.setCoverImageUrl(playlist.getCoverImageUrl()); // 🌟 NEW
+        response.setCoverImageUrl(playlist.getCoverImageUrl()); //  NEW
         return response;
     }
 

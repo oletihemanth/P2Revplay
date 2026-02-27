@@ -92,7 +92,7 @@ public class ArtistService {
                         SongPerformanceDTO dto = new SongPerformanceDTO();
                         dto.setSongId(song.getSongId());
                         dto.setTitle(song.getTitle());
-                        dto.setPlayCount(song.getPlayCount() != null ? song.getPlayCount() : 0);
+                        dto.setPlayCount(song.getPlayCount() != null ? song.getPlayCount() : 0L);
                         return dto;
                     }).collect(Collectors.toList());
             response.setTopSongs(topSongs);
