@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/artists")
 public class ArtistController {
@@ -35,9 +37,29 @@ public class ArtistController {
         return ResponseEntity.ok(artistService.getPublicProfile(artistId));
     }
 
-    // View your detailed analytics dashboard
+    // --- ANALYTICS ENDPOINTS ---
+
+    // 1. Dashboard (Total plays, songs, top songs, total favorites)
     @GetMapping("/stats")
     public ResponseEntity<ArtistStatsResponse> getAnalytics(Authentication authentication) {
         return ResponseEntity.ok(artistService.getArtistAnalytics(authentication.getName()));
+    }
+
+    // 2. NEW: Users who favorited my songs
+    @GetMapping("/analytics/favorited-by")
+    public ResponseEntity<List<UserProfileDTO>> getUsersWhoFavorited(Authentication authentication) {
+        return ResponseEntity.ok(artistService.getUsersWhoFavorited(authentication.getName()));
+    }
+
+    // 3. NEW: Top Listeners (Fans who played my music the most)
+    @GetMapping("/analytics/top-listeners")
+    public ResponseEntity<List<TopListenerDTO>> getTopListeners(Authentication authentication) {
+        return ResponseEntity.ok(artistService.getTopListeners(authentication.getName()));
+    }
+
+    // 4. NEW: Daily Listening Trends
+    @GetMapping("/analytics/trends")
+    public ResponseEntity<List<TrendDTO>> getListeningTrends(Authentication authentication) {
+        return ResponseEntity.ok(artistService.getListeningTrends(authentication.getName()));
     }
 }

@@ -1,0 +1,40 @@
+<div class="upload-container">
+  <div class="upload-card">
+    <h2>Upload a New Track</h2>
+    <p>Share your music with the RevPlay world</p>
+
+    <form (submit)="onUpload($event)">
+      <div class="form-group">
+        <label for="title">Song Title</label>
+        <input type="text" id="title" name="title" placeholder="e.g. Midnight City" required>
+      </div>
+
+      <div class="form-group">
+        <label for="genre">Genre</label>
+        <select id="genre" name="genre">
+          <option value="Pop">Pop</option>
+          <option value="Rock">Rock</option>
+          <option value="Hip-Hop">Hip-Hop</option>
+          <option value="Electronic">Electronic</option>
+          <option value="Classical">Classical</option>
+        </select>
+      </div>
+
+      <div class="form-group file-upload">
+        <label for="audioFile">Audio File (.mp3)</label>
+        <input type="file" id="audioFile" (change)="onFileSelected($event, 'audio')" accept="audio/*" required>
+      </div>
+
+      <div class="form-group file-upload">
+        <label for="coverImage">Cover Art (.jpg, .png)</label>
+        <input type="file" id="coverImage" (change)="onFileSelected($event, 'image')" accept="image/*">
+      </div>
+
+      <button type="submit" class="upload-btn" [disabled]="isUploading">
+        {{ isUploading ? 'Uploading...' : 'Publish Track' }}
+      </button>
+    </form>
+    
+    <button routerLink="/home" class="back-btn">Back to Dashboard</button>
+  </div>
+</div>

@@ -17,7 +17,7 @@ public class Song {
     @Column(nullable = false, length = 50)
     private String genre;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer duration;
 
     @Column(name = "play_count")
@@ -42,7 +42,6 @@ public class Song {
 
     public Song() {}
 
-    // --- Getters and Setters ---
     public Long getSongId() { return songId; }
     public void setSongId(Long songId) { this.songId = songId; }
 

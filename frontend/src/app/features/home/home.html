@@ -1,0 +1,190 @@
+<div class="home-container" style="padding-bottom: 100px;">
+  
+  <header class="dashboard-header">
+    <div>
+      <h1>Welcome to RevPlay!</h1>
+      <!-- <h2 class="greeting">Hi, {{ userName }}!</h2> -->
+    </div>
+    <div class="header-actions">
+      <button *ngIf="userRole === 'ARTIST'" routerLink="/upload" class="upload-btn">
+        + Upload Music
+      </button>
+
+      <button *ngIf="userRole === 'ARTIST'" routerLink="/my-music" class="upload-btn">
+         My Uploads
+      </button>
+
+      <button *ngIf="userRole === 'ARTIST'" routerLink="/my-albums" class="upload-btn">
+         My Albums
+      </button>
+
+      <button *ngIf="userRole === 'ARTIST'" routerLink="/analytics" class="upload-btn">
+         Analytics
+      </button>
+
+      <button routerLink="/discover" class="upload-btn">
+        🌍 Discover
+      </button>
+
+      <button routerLink="/playlists" class="upload-btn">
+        🎧 Playlists
+      </button>
+
+      <button routerLink="/favorites" class="upload-btn">
+        ❤️ Favorites
+      </button>
+
+      <button routerLink="/profile" class="upload-btn">
+        👤 Profile
+      </button>
+
+      <button (click)="onLogout()" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <div class="music-feed">
+    
+    <div class="recently-played-section" *ngIf="recentHistory.length > 0" style="margin-bottom: 50px;">
+      <h3>Recently Played </h3>
+      
+      <div class="song-grid" style="display: flex; overflow-x: auto; padding-bottom: 15px; gap: 20px;">
+        
+        <div class="song-card" *ngFor="let history of recentHistory" (click)="playSong(history)" style="min-width: 200px;">
+          
+          <div class="album-art">
+            <img *ngIf="history.coverImageUrl" [src]="getCoverImageUrl(history.coverImageUrl)" alt="Album Art">
+            <div *ngIf="!history.coverImageUrl" class="placeholder-art">🎵</div>
+            <div class="play-overlay" [class.active]="currentPlayingSongId === history.songId && isCurrentlyPlaying">
+              <span *ngIf="currentPlayingSongId === history.songId && isCurrentlyPlaying">⏸</span>
+              <span *ngIf="!(currentPlayingSongId === history.songId && isCurrentlyPlaying)">▶</span>
+            </div>
+          </div>
+
+          <div class="song-info">
+            <div class="song-title-row">
+              <h4>{{ history.songTitle }}</h4>
+            </div>
+            <p class="artist-name">{{ history.artistName || 'Unknown Artist' }}</p>
+            
+            <div class="song-stats">
+              <span class="play-count">Played: {{ history.playedAt | date:'shortTime' }}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="albums-section" *ngIf="albums.length > 0" style="margin-bottom: 50px;">
+      <h3>Trending Albums</h3>
+      
+      <div class="song-grid" style="display: flex; overflow-x: auto; padding-bottom: 15px; gap: 20px;">
+        <div class="song-card" *ngFor="let album of albums" (click)="goToAlbum(album.albumId)" style="min-width: 200px;">
+          
+          <div class="album-art">
+            <img *ngIf="album.coverImageUrl" [src]="getCoverImageUrl(album.coverImageUrl)" alt="Album Art">
+            <div *ngIf="!album.coverImageUrl" class="placeholder-art" style="font-size: 3rem; background: #282828; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">💿</div>
+          </div>
+
+          <div class="song-info">
+            <div class="song-title-row">
+              <h4>{{ album.title }}</h4>
+            </div>
+            <p class="artist-name">Released: {{ album.releaseYear || 'Unknown' }}</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <h3>Discover Tracks</h3>
+    
+    <div class="search-filter-bar">
+      <input 
+        type="text" 
+        placeholder="Search for a song..." 
+        [(ngModel)]="searchQuery" 
+        (keyup)="onSearch()"
+        class="search-input"
+      >
+      
+      <select [(ngModel)]="selectedGenre" (change)="onFilterChange()" class="genre-filter">
+        <option value="">All Genres</option>
+        <option value="Pop">Pop</option>
+        <option value="Rock">Rock</option>
+        <option value="Hip-Hop">Hip-Hop</option>
+        <option value="Electronic">Electronic</option>
+        <option value="Classical">Classical</option>
+      </select>
+
+      <button (click)="clearFilters()" class="clear-btn" *ngIf="searchQuery || selectedGenre">
+        Clear
+      </button>
+    </div>
+    
+    <div *ngIf="songs.length === 0" class="no-songs">
+      <p>No songs found. Try a different search, or be the first to upload!</p>
+    </div>
+
+    <div class="song-grid">
+      <div class="song-card" *ngFor="let song of songs" (click)="playSong(song)">
+        
+        <div class="album-art">
+          <img *ngIf="song.coverImageUrl" [src]="getCoverImageUrl(song.coverImageUrl)" alt="Album Art">
+          <div *ngIf="!song.coverImageUrl" class="placeholder-art">🎵</div>
+          <div class="play-overlay" [class.active]="currentPlayingSongId === song.songId && isCurrentlyPlaying">
+            <span *ngIf="currentPlayingSongId === song.songId && isCurrentlyPlaying">⏸</span>
+            <span *ngIf="!(currentPlayingSongId === song.songId && isCurrentlyPlaying)">▶</span>
+          </div>
+        </div>
+
+        <div class="song-info">
+          
+          <div class="song-title-row">
+            <h4>{{ song.title }}</h4>
+            
+            <div class="card-actions">
+              <button class="add-btn" (click)="openPlaylistModal($event, song)" title="Add to Playlist">➕</button>
+              <button 
+                class="heart-btn" 
+                [class.liked]="isLiked(song.songId)" 
+                (click)="toggleLike($event, song.songId)">
+                {{ isLiked(song.songId) ? '♥' : '♡' }}
+              </button>
+            </div>
+          </div>
+
+          <p class="artist-name">{{ song.artistName || 'Unknown Artist' }}</p>
+          
+          <div class="song-stats">
+            <span class="genre-badge">{{ song.genre }}</span>
+            <span class="play-count"> {{ song.playCount || 0 }}</span>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showPlaylistModal">
+    <div class="modal-content">
+      <h2>Add to Playlist</h2>
+      <p class="modal-subtitle">Select a playlist for: <strong>{{ selectedSongForPlaylist?.title }}</strong></p>
+      
+      <div *ngIf="myPlaylists.length === 0" class="no-playlists">
+        You don't have any playlists yet! Go to the Playlists tab to create one.
+      </div>
+
+      <div class="playlist-list" *ngIf="myPlaylists.length > 0">
+        <button class="playlist-item-btn" *ngFor="let playlist of myPlaylists" (click)="addToPlaylist(playlist.playlistId)">
+          🎧 {{ playlist.name }}
+        </button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="closePlaylistModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>

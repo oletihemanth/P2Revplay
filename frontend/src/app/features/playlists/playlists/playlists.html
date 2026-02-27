@@ -1,0 +1,78 @@
+<div class="playlists-container">
+  
+  <header class="dashboard-header">
+    <div>
+      <h1>My Playlists 🎧</h1>
+      <p class="subtitle">Curate your perfect vibes</p>
+    </div>
+    <div class="header-actions">
+      <button (click)="openCreateModal()" class="create-btn">+ New Playlist</button>
+      <button routerLink="/home" class="back-btn">Back to Home</button>
+    </div>
+  </header>
+
+  <div *ngIf="myPlaylists.length === 0" class="no-playlists">
+    <p>You haven't created any playlists yet. Start mixing!</p>
+  </div>
+
+  <div class="playlist-grid">
+    <div class="playlist-card" *ngFor="let playlist of myPlaylists" [routerLink]="['/playlists', playlist.playlistId]">
+      
+      <div class="playlist-icon" style="overflow: hidden; padding: 0;">
+        <img *ngIf="playlist.coverImageUrl" [src]="getCoverImageUrl(playlist.coverImageUrl)" (error)="onImageError($event)" style="width: 100%; height: 100%; object-fit: cover;">
+        <div *ngIf="!playlist.coverImageUrl" style="font-size: 3rem; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">🎧</div>
+      </div>
+      
+      <div class="playlist-info">
+        <h3>{{ playlist.name }}</h3>
+        <p class="description">{{ playlist.description || 'No description' }}</p>
+        <div class="playlist-meta">
+          <span class="badge">{{ playlist.privacy }}</span>
+          <span class="song-count">🎵 {{ playlist.songCount || 0 }} tracks</span>
+        </div>
+      </div>
+      
+      <div class="card-actions-top">
+        <button class="edit-icon" (click)="openEditModal($event, playlist)" title="Edit Playlist">✏️</button>
+        <button class="delete-icon" (click)="deletePlaylist($event, playlist.playlistId)" title="Delete Playlist">🗑️</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showCreateModal">
+    <div class="modal-content">
+      
+      <h2>{{ isEditing ? 'Edit Playlist' : 'Create New Playlist' }}</h2>
+      
+      <div class="form-group">
+        <label>Playlist Name</label>
+        <input type="text" [(ngModel)]="newPlaylist.name" placeholder="e.g. Workout Mix" class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label>Description</label>
+        <textarea [(ngModel)]="newPlaylist.description" placeholder="What's the vibe?" class="form-control"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Privacy</label>
+        <select [(ngModel)]="newPlaylist.privacy" class="form-control">
+          <option value="PUBLIC">Public</option>
+          <option value="PRIVATE">Private</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Cover Art (Optional)</label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control" style="padding: 7px;">
+      </div>
+
+      <div class="modal-actions">
+        <button class="save-btn" (click)="savePlaylist()">{{ isEditing ? 'Update' : 'Create' }}</button>
+        <button class="cancel-btn" (click)="closeCreateModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</div>

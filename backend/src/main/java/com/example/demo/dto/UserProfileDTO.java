@@ -11,6 +11,9 @@ public class UserProfileDTO {
     private String bio;
     private LocalDateTime createdAt;
 
+    //  NEW: Track total plays for artists
+    private long totalPlays;
+
     // --- Getters and Setters ---
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
@@ -32,4 +35,8 @@ public class UserProfileDTO {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    //  NEW: Getters and Setters for totalPlays
+    public long getTotalPlays() { return totalPlays; }
+    public void setTotalPlays(long totalPlays) { this.totalPlays = totalPlays; }
 }

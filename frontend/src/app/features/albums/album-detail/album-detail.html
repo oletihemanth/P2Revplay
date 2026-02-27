@@ -1,0 +1,58 @@
+<div class="album-detail-container">
+  
+  <button class="back-btn" (click)="goBack()">← Back</button>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Loading album...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading && album">
+    
+    <header class="album-header">
+      <div class="album-art-container">
+        <img *ngIf="album.coverImageUrl" [src]="getCoverImageUrl(album.coverImageUrl)" (error)="onImageError($event)" class="album-art">
+        <div *ngIf="!album.coverImageUrl" class="placeholder-art">💿</div>
+      </div>
+      
+      <div class="album-info">
+        <span class="badge">Album</span>
+        <h1 class="title">{{ album.title }}</h1>
+        <div class="album-meta">
+          <span class="release-year">{{ album.releaseYear || 'Unknown Year' }}</span>
+          <span class="dot">•</span>
+          <span class="song-count">{{ albumSongs.length }} songs</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="action-bar" *ngIf="albumSongs.length > 0">
+      <button class="play-btn" (click)="playFullAlbum()">
+        <span class="play-icon">▶</span>
+      </button>
+    </div>
+
+    <div class="tracklist-section">
+      <div *ngIf="albumSongs.length === 0" class="empty-state">
+        <p>The artist hasn't added any songs to this album yet.</p>
+      </div>
+
+      <div class="tracklist" *ngIf="albumSongs.length > 0">
+        <div class="track-header">
+          <span class="hash">#</span>
+          <span class="track-title-header">Title</span>
+          <span class="track-genre-header">Genre</span>
+        </div>
+        
+        <div class="track-row" *ngFor="let song of albumSongs; let i = index" (click)="playSong(song)">
+          <span class="track-number">{{ i + 1 }}</span>
+          <div class="track-title-col">
+            <span class="track-name">{{ song.title }}</span>
+          </div>
+          <span class="track-genre">{{ song.genre }}</span>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+
+</div>

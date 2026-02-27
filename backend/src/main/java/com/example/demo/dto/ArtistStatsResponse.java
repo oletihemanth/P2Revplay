@@ -6,7 +6,8 @@ public class ArtistStatsResponse {
     private String genre;
     private int totalSongsUploaded;
     private long totalAllTimePlays;
-    private List<SongPerformanceDTO> topSongs; // Shows the artist's most popular songs!
+    private long totalFavorites; // --- NEW ---
+    private List<SongPerformanceDTO> topSongs;
 
     // Getters and Setters
     public String getArtistName() { return artistName; }
@@ -17,6 +18,8 @@ public class ArtistStatsResponse {
     public void setTotalSongsUploaded(int totalSongsUploaded) { this.totalSongsUploaded = totalSongsUploaded; }
     public long getTotalAllTimePlays() { return totalAllTimePlays; }
     public void setTotalAllTimePlays(long totalAllTimePlays) { this.totalAllTimePlays = totalAllTimePlays; }
+    public long getTotalFavorites() { return totalFavorites; }
+    public void setTotalFavorites(long totalFavorites) { this.totalFavorites = totalFavorites; }
     public List<SongPerformanceDTO> getTopSongs() { return topSongs; }
     public void setTopSongs(List<SongPerformanceDTO> topSongs) { this.topSongs = topSongs; }
 }

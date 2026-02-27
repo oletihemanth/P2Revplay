@@ -11,14 +11,14 @@ import java.util.List;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, Long> {
-
-    List<Song> findByTitleContainingIgnoreCase(String title);
-    List<Song> findByGenreIgnoreCase(String genre);
     List<Song> findByArtist(Artist artist);
 
-    // NEW: Dynamic Advanced Filtering
+    List<Song> findByVisibility(String visibility);
+    List<Song> findByTitleContainingIgnoreCaseAndVisibility(String title, String visibility);
+
     @Query("SELECT s FROM Song s LEFT JOIN s.album a LEFT JOIN s.artist art LEFT JOIN art.user u " +
-            "WHERE (:genre IS NULL OR LOWER(s.genre) = LOWER(:genre)) " +
+            "WHERE s.visibility = 'PUBLIC' " +
+            "AND (:genre IS NULL OR LOWER(s.genre) = LOWER(:genre)) " +
             "AND (:artistName IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :artistName, '%'))) " +
             "AND (:albumName IS NULL OR LOWER(a.title) LIKE LOWER(CONCAT('%', :albumName, '%'))) " +
             "AND (:releaseYear IS NULL OR YEAR(a.releaseDate) = :releaseYear)")

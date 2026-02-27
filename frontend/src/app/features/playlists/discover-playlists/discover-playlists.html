@@ -1,0 +1,46 @@
+<div class="discover-container">
+  
+  <header class="dashboard-header">
+    <div>
+      <h1>Discover </h1>
+      <p class="subtitle">Explore public playlists curated by the community</p>
+    </div>
+    <div class="header-actions">
+      <button routerLink="/playlists" class="back-btn">My Playlists</button>
+      <button routerLink="/home" class="back-btn">Back to Home</button>
+    </div>
+  </header>
+
+  <div class="search-bar-container">
+    <input 
+      type="text" 
+      placeholder="Search for a vibe or creator..." 
+      [(ngModel)]="searchQuery" 
+      (keyup)="onSearch()"
+      class="search-input"
+    >
+  </div>
+
+  <div *ngIf="filteredPlaylists.length === 0" class="no-playlists">
+    <p>No public playlists found. Be the first to share one!</p>
+  </div>
+
+  <div class="playlist-grid">
+    
+    <div class="playlist-card" *ngFor="let playlist of filteredPlaylists" [routerLink]="['/playlists', playlist.playlistId]">
+      
+      <div class="playlist-info">
+        <h3>{{ playlist.name }}</h3>
+        <p class="description">{{ playlist.description || 'No description provided.' }}</p>
+        
+        <div class="playlist-meta">
+          <span class="creator-badge">By: {{ playlist.creatorName || 'Anonymous' }}</span>
+          <span class="song-count">🎵 {{ playlist.songCount || 0 }} tracks</span>
+        </div>
+      </div>
+      
+      <div class="play-overlay">▶</div>
+    </div>
+    
+  </div>
+</div>

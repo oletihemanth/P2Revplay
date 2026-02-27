@@ -1,0 +1,113 @@
+.playlists-container { min-height: 100vh; background: #121212; color: white; padding: 40px; font-family: sans-serif; }
+.dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #282828; padding-bottom: 20px; margin-bottom: 30px; }
+h1 { color: #1DB954; margin: 0 0 5px 0; font-size: 2.5rem; }
+.subtitle { color: #b3b3b3; margin: 0; font-size: 1.1rem; }
+.header-actions { display: flex; gap: 15px; }
+
+.create-btn { background: #1DB954; color: black; padding: 10px 20px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.create-btn:hover { background: #1ed760; transform: scale(1.05); }
+.back-btn { background: transparent; border: 1px solid white; color: white; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.back-btn:hover { background: white; color: black; }
+
+.no-playlists { color: #b3b3b3; font-style: italic; font-size: 1.2rem; }
+
+/* Grid & Cards */
+.playlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+.playlist-card { background: #181818; padding: 20px; border-radius: 8px; position: relative; transition: background 0.3s; border: 1px solid #282828; }
+.playlist-card:hover { background: #282828; }
+
+.playlist-icon { font-size: 3rem; margin-bottom: 15px; text-align: center; color: #1DB954; background: #333; padding: 20px; border-radius: 8px; }
+.playlist-info h3 { margin: 0 0 10px 0; font-size: 1.3rem; }
+.description { color: #b3b3b3; font-size: 0.9rem; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+.playlist-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+.badge { background: #333; padding: 4px 8px; border-radius: 10px; color: #1DB954; }
+.song-count { color: #b3b3b3; }
+
+/* --- Grouped Card Actions (Edit & Delete) --- */
+.card-actions-top { 
+  position: absolute; 
+  top: 15px; 
+  right: 15px; 
+  display: flex; 
+  gap: 10px; 
+  opacity: 0; 
+  transition: opacity 0.3s; 
+}
+
+.playlist-card:hover .card-actions-top { 
+  opacity: 1; 
+}
+
+.delete-icon, .edit-icon { 
+  background: none; 
+  border: none; 
+  font-size: 1.2rem; 
+  cursor: pointer; 
+  transition: transform 0.2s; 
+  padding: 0;
+}
+
+.delete-icon:hover, .edit-icon:hover { 
+  transform: scale(1.2); 
+}
+
+/* 🌟 MODAL FIXES BELOW 🌟 */
+.modal-overlay { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100vw; 
+  height: 100vh; 
+  background: rgba(0,0,0,0.8); 
+  display: flex; 
+  justify-content: center; 
+  
+  /* 🌟 Force the modal to start near the top of the screen instead of the center */
+  align-items: flex-start; 
+  padding-top: 8vh; 
+  
+  z-index: 2000; 
+}
+
+.modal-content { 
+  background: #181818; 
+  /* 🌟 Added extra padding at the bottom so the buttons aren't riding the edge */
+  padding: 30px 30px 40px 30px; 
+  border-radius: 10px; 
+  width: 100%;
+  max-width: 450px; 
+  border: 1px solid #333; 
+
+  /* 🌟 Strictly limit height so it never bleeds down into the music player area */
+  max-height: 60vh; 
+  overflow-y: auto; 
+}
+
+/* Sleek Custom Scrollbar for the Modal */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-content::-webkit-scrollbar-track {
+  background: #181818;
+  border-radius: 10px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.modal-content h2 { margin-top: 0; color: #1DB954; margin-bottom: 20px; }
+
+.form-group { margin-bottom: 20px; display: flex; flex-direction: column; }
+.form-group label { margin-bottom: 5px; color: #b3b3b3; font-size: 0.9rem; }
+.form-control { padding: 12px; background: #282828; border: 1px solid #333; border-radius: 4px; color: white; font-size: 1rem; outline: none; }
+.form-control:focus { border-color: #1DB954; }
+textarea.form-control { resize: vertical; min-height: 80px; }
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.save-btn { background: #1DB954; color: black; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+.cancel-btn { background: transparent; color: white; border: none; padding: 10px 20px; cursor: pointer; }

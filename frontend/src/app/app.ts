@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { RegisterComponent } from './auth/register/register';
+//  1. Import the Global Player component
+import { GlobalPlayer } from './shared/components/global-player/global-player'; 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RegisterComponent], // We must import the register component here
+  //  2. Add GlobalPlayer here so Angular recognizes the <app-global-player> tag!
+  imports: [RouterOutlet, GlobalPlayer], 
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css' // (or app.component.css)
 })
-export class App {
+export class App { 
   title = 'frontend';
 }

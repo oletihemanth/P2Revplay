@@ -1,0 +1,121 @@
+.manage-album-container {
+  padding: 40px;
+  color: white;
+  font-family: sans-serif;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-bottom: 120px;
+  background: linear-gradient(to bottom, #1f1f1f 0%, #121212 300px);
+}
+
+.back-btn {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: 1px solid #333;
+  padding: 8px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 30px;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover { background: white; color: black; }
+
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 40px;
+  background: rgba(24, 24, 24, 0.5);
+  border-radius: 10px;
+  color: #b3b3b3;
+}
+
+.album-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.album-art-container {
+  width: 220px;
+  height: 220px;
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+  background: #282828;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.album-art { width: 100%; height: 100%; object-fit: cover; }
+.placeholder-art { font-size: 5rem; }
+
+.badge { color: #1DB954; font-size: 0.9rem; font-weight: bold; letter-spacing: 1px; }
+
+.album-info h1 { font-size: 4rem; font-weight: 900; margin: 5px 0 10px 0; line-height: 1; }
+.release-year { color: #b3b3b3; margin: 0 0 15px 0; font-size: 1.1rem; }
+
+/* NEW: Action Buttons */
+.album-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.edit-album-btn, .delete-album-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease;
+}
+
+.edit-album-btn { background: #333; color: white; border: 1px solid #555; }
+.edit-album-btn:hover { background: #444; border-color: white; transform: scale(1.05); }
+
+.delete-album-btn { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; }
+.delete-album-btn:hover { background: #ff4d4d; color: white; transform: scale(1.05); }
+
+/* Grid Layout for Management */
+.management-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+h2 { font-size: 1.5rem; border-bottom: 1px solid #282828; padding-bottom: 10px; margin-bottom: 20px; }
+
+.song-list { display: flex; flex-direction: column; gap: 10px; }
+.list-item { display: flex; align-items: center; background: #181818; padding: 15px; border-radius: 8px; transition: background 0.2s; }
+.list-item:hover { background: #282828; }
+
+.song-number { width: 40px; color: #b3b3b3; font-weight: bold; text-align: center; }
+.song-details { flex-grow: 1; }
+.pl-0 { padding-left: 10px; }
+.song-details h4 { margin: 0 0 5px 0; font-size: 1rem; color: white; }
+.song-details p { margin: 0; font-size: 0.85rem; color: #b3b3b3; }
+
+.remove-btn, .add-btn { padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; border: none; transition: transform 0.2s; }
+.remove-btn { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; }
+.remove-btn:hover { background: #ff4d4d; color: white; }
+.add-btn { background: transparent; color: white; border: 1px solid white; }
+.add-btn:hover { background: white; color: black; transform: scale(1.05); }
+
+/* NEW: Modal Styles */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+.modal-content { background: #181818; padding: 30px; border-radius: 10px; width: 400px; border: 1px solid #333; }
+.modal-content h2 { margin-top: 0; color: #1DB954; margin-bottom: 20px; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; color: #b3b3b3; margin-bottom: 8px; font-size: 0.9rem; }
+.form-input { width: 100%; padding: 10px 15px; background: #282828; border: 1px solid #333; border-radius: 5px; color: white; outline: none; box-sizing: border-box; }
+.form-input:focus { border-color: #1DB954; }
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+.cancel-btn { background: transparent; color: white; border: 1px solid white; padding: 10px 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
+.cancel-btn:hover { background: white; color: black; }
+.save-btn { background: #1DB954; color: black; border: none; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.save-btn:hover:not(:disabled) { transform: scale(1.05); background: #1ed760; }
+.save-btn:disabled { background: #555; color: #888; cursor: not-allowed; }

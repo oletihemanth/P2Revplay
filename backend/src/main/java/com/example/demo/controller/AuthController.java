@@ -18,7 +18,6 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // Endpoint: POST http://localhost:8080/api/auth/register
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
         try {
@@ -29,14 +28,29 @@ public class AuthController {
         }
     }
 
-    // Endpoint: POST http://localhost:8080/api/auth/login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
+            // This Map should contain {"token": "...", "role": "..."}
             Map<String, String> response = authService.loginUser(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid email or password");
+        }
+    }
+
+    // NEW: Forgot Password Endpoint
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String newPassword = request.get("newPassword");
+
+        try {
+            String message = authService.resetPassword(email, newPassword);
+            // Returning as a JSON object so Angular parses it seamlessly
+            return ResponseEntity.ok(Map.of("message", message));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 }

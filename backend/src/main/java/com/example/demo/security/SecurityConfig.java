@@ -37,16 +37,26 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-
-
+                        // 1. Allow everyone to Login and Register
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/songs/**").permitAll()
+
+                        // NEW: Allow Swagger UI and API Docs
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+                        // 2. ONLY allow the audio streaming endpoint to be public!
+                        // This allows the HTML <audio> tag to play music without a JWT token
+                        .requestMatchers("/api/songs/play/**").permitAll()
+
+                        // NEW: Allow the image serving endpoint to be public so cover arts can load
+                        .requestMatchers("/api/songs/image/**").permitAll()
+
+                        // 3. Allow access to physical upload folder if accessed directly
                         .requestMatchers("/uploads/**").permitAll()
 
-
+                        // 4. Protect artist-specific routes
                         .requestMatchers("/api/artist/**").hasRole("ARTIST")
 
-
+                        // 5. EVERYTHING else (like uploading a song, deleting, or fetching dashboard) requires login
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,0 +1,54 @@
+<div class="playlist-detail-container" *ngIf="playlistData">
+  
+  <header class="detail-header" style="display: flex; gap: 20px; align-items: flex-end;">
+    <div class="playlist-cover" style="width: 200px; height: 200px; border-radius: 8px; overflow: hidden; background: #282828; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;">
+      <img *ngIf="playlistData.coverImageUrl" [src]="getCoverImageUrl(playlistData.coverImageUrl)" (error)="onImageError($event)" style="width: 100%; height: 100%; object-fit: cover;">
+      <div *ngIf="!playlistData.coverImageUrl" style="font-size: 5rem;">🎧</div>
+    </div>
+
+    <div class="header-info">
+      <span class="privacy-badge">{{ playlistData.privacy }} PLAYLIST</span>
+      <h1>{{ playlistData.name }}</h1>
+      <p class="description">{{ playlistData.description }}</p>
+      <p class="meta">Created by <strong>{{ playlistData.creatorName }}</strong> • {{ playlistData.songs?.length || 0 }} songs</p>
+    </div>
+    <div style="flex-grow: 1; text-align: right;">
+      <button routerLink="/playlists" class="back-btn" style="background: transparent; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 20px; cursor: pointer;">Back to Playlists</button>
+    </div>
+  </header>
+
+  <div class="action-bar" *ngIf="playlistData.songs?.length > 0" style="margin: 20px 0;">
+    <button (click)="playFullPlaylist()" style="background: #1DB954; color: black; border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s;">
+      ▶
+    </button>
+  </div>
+
+  <div class="songs-section">
+    
+    <div *ngIf="!playlistData.songs || playlistData.songs.length === 0" class="empty-state">
+      <p>This playlist is empty. Go discover some music!</p>
+      <button routerLink="/home" class="explore-btn">Explore Music</button>
+    </div>
+
+    <div class="song-list" *ngIf="playlistData.songs?.length > 0">
+      <div class="song-row" *ngFor="let song of playlistData.songs; let i = index" (click)="playSong(song)">
+        
+        <div class="song-left">
+          <span class="song-index">{{ i + 1 }}</span>
+          <img [src]="getCoverImageUrl(song.coverImageUrl)" (error)="onImageError($event)" class="row-img" alt="Cover" style="width: 40px; height: 40px; border-radius: 4px;">
+          <div class="song-info">
+            <h4>{{ song.title }}</h4>
+            <p>{{ song.artistName || 'Unknown Artist' }}</p>
+          </div>
+        </div>
+        
+        <div class="song-right">
+          <span class="genre-badge">{{ song.genre }}</span>
+          <button class="remove-btn" (click)="removeSong($event, song.songId)" title="Remove from playlist">✖</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

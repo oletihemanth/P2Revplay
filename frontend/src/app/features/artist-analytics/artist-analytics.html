@@ -1,0 +1,78 @@
+<div class="analytics-container">
+  
+  <header class="dashboard-header flex-header">
+    <div>
+      <h1>Artist Analytics</h1>
+      <p>Track your performance and see how your music is connecting with the world.</p>
+    </div>
+    
+    <button routerLink="/home" class="back-btn">Back to Dashboard</button>
+  </header>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Loading your stats...</p>
+  </div>
+
+  <div *ngIf="!isLoading && mySongs.length === 0" class="empty-state">
+    <p>You haven't uploaded any music yet! Upload a track to start seeing analytics.</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading && mySongs.length > 0">
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Lifetime Plays</h3>
+        <div class="stat-number">{{ totalLifetimePlays }}</div>
+      </div>
+      
+      <div class="stat-card">
+        <h3>Total Tracks Published</h3>
+        <div class="stat-number">{{ mySongs.length }}</div>
+      </div>
+
+      <div class="stat-card highlight-card" *ngIf="mostPopularSong">
+        <h3>Most Popular Track</h3>
+        <div class="popular-song-info">
+          <img [src]="getCoverImageUrl(mostPopularSong.coverImageUrl)" alt="Cover">
+          <div>
+            <h4>{{ mostPopularSong.title }}</h4>
+            <p>{{ mostPopularSong.playCount || 0 }} Plays</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <h2>Track Performance</h2>
+      <table class="analytics-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Track</th>
+            <th>Genre</th>
+            <th>Visibility</th>
+            <th class="text-right">Total Plays</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let song of mySongs; let i = index">
+            <td>#{{ i + 1 }}</td>
+            <td class="track-cell">
+              <img [src]="getCoverImageUrl(song.coverImageUrl)" class="table-img" alt="Cover">
+              <span>{{ song.title }}</span>
+            </td>
+            <td>{{ song.genre }}</td>
+            <td>
+              <span class="status-badge" [class.public]="song.visibility === 'PUBLIC'">
+                {{ song.visibility }}
+              </span>
+            </td>
+            <td class="text-right font-bold">{{ song.playCount || 0 }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </ng-container>
+
+</div>

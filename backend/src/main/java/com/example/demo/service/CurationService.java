@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.PlaylistRequest;
 import com.example.demo.dto.PlaylistResponse;
+import com.example.demo.dto.SongDTO;
 import com.example.demo.entity.*;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,16 +22,18 @@ public class CurationService {
     private final FollowedPlaylistRepository followedPlaylistRepository;
     private final UserRepository userRepository;
     private final SongRepository songRepository;
+    private final FileStorageService fileStorageService; //  NEW: Inject FileStorageService
 
     public CurationService(FavoriteRepository favoriteRepository, PlaylistRepository playlistRepository,
                            PlaylistSongRepository playlistSongRepository, FollowedPlaylistRepository followedPlaylistRepository,
-                           UserRepository userRepository, SongRepository songRepository) {
+                           UserRepository userRepository, SongRepository songRepository, FileStorageService fileStorageService) {
         this.favoriteRepository = favoriteRepository;
         this.playlistRepository = playlistRepository;
         this.playlistSongRepository = playlistSongRepository;
         this.followedPlaylistRepository = followedPlaylistRepository;
         this.userRepository = userRepository;
         this.songRepository = songRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     // --- 1. FAVORITES LOGIC ---
@@ -45,39 +48,84 @@ public class CurationService {
             return "Song removed from favorites.";
         } else {
             Favorite favorite = new Favorite();
-
-            // Handled automatically by @IdClass
             favorite.setUser(user);
             favorite.setSong(song);
-
             favoriteRepository.save(favorite);
             return "Song added to favorites!";
         }
     }
 
+    public List<SongDTO> getMyFavorites(String email) {
+        User user = getUser(email);
+        return favoriteRepository.findByUser(user).stream()
+                .map(favorite -> mapSongToDTO(favorite.getSong()))
+                .collect(Collectors.toList());
+    }
+
+    public long getFavoritesCount(String email) {
+        User user = getUser(email);
+        return favoriteRepository.countByUser(user);
+    }
+
     // --- 2. PLAYLIST CRUD LOGIC ---
+    public PlaylistResponse getPlaylistById(Long playlistId) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new ResourceNotFoundException("Playlist not found"));
+
+        PlaylistResponse response = mapToResponse(playlist);
+
+        List<PlaylistSong> playlistSongs = playlistSongRepository.findByPlaylistOrderBySongOrderAsc(playlist);
+
+        List<SongDTO> songDTOs = playlistSongs.stream()
+                .map(ps -> mapSongToDTO(ps.getSong()))
+                .collect(Collectors.toList());
+
+        response.setSongs(songDTOs);
+        return response;
+    }
+
+    //  UPDATED: Handle MultipartFile for Create
     @Transactional
-    public PlaylistResponse createPlaylist(String email, PlaylistRequest request) {
+    public PlaylistResponse createPlaylist(String email, String name, String description, String privacy, MultipartFile coverImage) {
         Playlist playlist = new Playlist();
         playlist.setUser(getUser(email));
-        playlist.setName(request.getName());
-        playlist.setDescription(request.getDescription());
-        playlist.setPrivacy(request.getPrivacy() != null ? request.getPrivacy() : "PUBLIC");
+        playlist.setName(name);
+        playlist.setDescription(description);
+        playlist.setPrivacy(privacy != null ? privacy : "PUBLIC");
+
+        if (coverImage != null && !coverImage.isEmpty()) {
+            String coverImageName = fileStorageService.storeFile(coverImage);
+            playlist.setCoverImageUrl(coverImageName);
+        }
+
         return mapToResponse(playlistRepository.save(playlist));
     }
 
+    //  UPDATED: Handle MultipartFile for Update
     @Transactional
-    public PlaylistResponse updatePlaylist(String email, Long playlistId, PlaylistRequest request) {
+    public PlaylistResponse updatePlaylist(String email, Long playlistId, String name, String description, String privacy, MultipartFile coverImage) {
         Playlist playlist = getPlaylistAsOwner(email, playlistId);
-        playlist.setName(request.getName());
-        playlist.setDescription(request.getDescription());
-        playlist.setPrivacy(request.getPrivacy());
+        playlist.setName(name);
+        playlist.setDescription(description);
+        playlist.setPrivacy(privacy);
+
+        if (coverImage != null && !coverImage.isEmpty()) {
+            String coverImageName = fileStorageService.storeFile(coverImage);
+            playlist.setCoverImageUrl(coverImageName);
+        }
+
         return mapToResponse(playlistRepository.save(playlist));
     }
 
+    //  UPDATED: Delete image if it exists
     @Transactional
     public String deletePlaylist(String email, Long playlistId) {
         Playlist playlist = getPlaylistAsOwner(email, playlistId);
+
+        if (playlist.getCoverImageUrl() != null) {
+            fileStorageService.deleteFile(playlist.getCoverImageUrl());
+        }
+
         playlistRepository.delete(playlist);
         return "Playlist deleted successfully.";
     }
@@ -103,10 +151,9 @@ public class CurationService {
         }
 
         PlaylistSong ps = new PlaylistSong();
-
-        // FIX: Handled automatically by @IdClass. No need for manual ID generation.
         ps.setPlaylist(playlist);
         ps.setSong(song);
+        ps.setSongOrder(1);
 
         playlistSongRepository.save(ps);
         return "Song added to playlist!";
@@ -124,7 +171,7 @@ public class CurationService {
         return "Song removed from playlist.";
     }
 
-    // --- 4. FOLLOW PLAYLIST LOGIC ---
+    // --- 4. FOLLOW / UNFOLLOW PLAYLIST LOGIC ---
     @Transactional
     public String toggleFollowPlaylist(String email, Long playlistId) {
         User user = getUser(email);
@@ -142,11 +189,8 @@ public class CurationService {
             return "Unfollowed playlist.";
         } else {
             FollowedPlaylist follow = new FollowedPlaylist();
-
-            // FIX: Handled automatically by @IdClass
             follow.setUser(user);
             follow.setPlaylist(playlist);
-
             followedPlaylistRepository.save(follow);
             return "Successfully followed playlist!";
         }
@@ -172,14 +216,27 @@ public class CurationService {
 
     private PlaylistResponse mapToResponse(Playlist playlist) {
         PlaylistResponse response = new PlaylistResponse();
-
-        // FIX: Changed to getPlaylistId() to match your new Playlist entity
         response.setPlaylistId(playlist.getPlaylistId());
-
         response.setName(playlist.getName());
         response.setDescription(playlist.getDescription());
         response.setPrivacy(playlist.getPrivacy());
         response.setCreatorName(playlist.getUser().getName());
+        response.setCoverImageUrl(playlist.getCoverImageUrl()); //  NEW
         return response;
+    }
+
+    private SongDTO mapSongToDTO(Song song) {
+        SongDTO dto = new SongDTO();
+        dto.setSongId(song.getSongId());
+        dto.setTitle(song.getTitle());
+        dto.setGenre(song.getGenre());
+        dto.setDuration(song.getDuration());
+        dto.setPlayCount(song.getPlayCount());
+        dto.setAudioFileUrl(song.getAudioFileUrl());
+        dto.setCoverImageUrl(song.getCoverImageUrl());
+        if (song.getArtist() != null && song.getArtist().getUser() != null) {
+            dto.setArtistName(song.getArtist().getUser().getName());
+        }
+        return dto;
     }
 }

@@ -1,0 +1,64 @@
+<div class="my-music-container">
+  
+  <header class="dashboard-header">
+    <div>
+      <h1>My Uploads </h1>
+      <h2 class="greeting">Manage your artist portfolio</h2>
+    </div>
+    <div class="header-actions">
+      <button routerLink="/upload" class="upload-btn">+ Upload New Track</button>
+      <button routerLink="/home" class="back-btn">Back to Dashboard</button>
+    </div>
+  </header>
+
+  <div *ngIf="mySongs.length === 0" class="no-songs">
+    <p>You haven't uploaded any tracks yet. Share your music with the RevPlay world!</p>
+  </div>
+
+  <div class="edit-modal-overlay" *ngIf="isEditing">
+    <div class="edit-modal">
+      <h3>Edit Track Details</h3>
+      
+      <div class="form-group">
+        <label>Song Title</label>
+        <input type="text" [(ngModel)]="editSongData.title" class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label>Genre</label>
+        <select [(ngModel)]="editSongData.genre" class="form-control">
+          <option value="Pop">Pop</option>
+          <option value="Rock">Rock</option>
+          <option value="Hip-Hop">Hip-Hop</option>
+          <option value="Electronic">Electronic</option>
+          <option value="Classical">Classical</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button class="save-btn" (click)="saveEdit()">Save Changes</button>
+        <button class="cancel-btn" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="song-list">
+    <div class="song-row" *ngFor="let song of mySongs">
+      
+      <div class="song-details">
+        <img [src]="getCoverImageUrl(song.coverImageUrl)" alt="Cover Art" class="list-cover">
+        <div class="song-info">
+          <h4>{{ song.title }}</h4>
+          <span class="genre-badge">{{ song.genre }}</span>
+        </div>
+      </div>
+
+      <div class="song-actions">
+        <button class="edit-btn" (click)="startEdit(song)"> Edit</button>
+        <button class="delete-btn" (click)="deleteSong(song.songId)"> Delete</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

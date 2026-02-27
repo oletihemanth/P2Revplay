@@ -1,0 +1,215 @@
+/* Container and Layout */
+.analytics-container {
+  padding: 40px;
+  color: white;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-bottom: 120px; /* Space for the global player */
+}
+
+/* Header */
+.dashboard-header {
+  margin-bottom: 40px;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 10px 0;
+  color: #1DB954; /* Spotify Green */
+}
+
+.dashboard-header p {
+  color: #b3b3b3;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* States */
+.loading-state, .empty-state {
+  text-align: center;
+  padding: 60px;
+  background: #181818;
+  border-radius: 10px;
+  color: #b3b3b3;
+  font-size: 1.2rem;
+}
+
+/* Top Stats Cards Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 50px;
+}
+
+.stat-card {
+  background: #181818;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #282828;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: #333;
+}
+
+.stat-card h3 {
+  margin: 0 0 15px 0;
+  color: #b3b3b3;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+}
+
+/* Highlight Card for Popular Track */
+.highlight-card {
+  background: linear-gradient(145deg, #181818 0%, #1DB954 200%);
+  border: none;
+}
+
+.highlight-card h3 {
+  color: white;
+}
+
+.popular-song-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.popular-song-info img {
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.popular-song-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.popular-song-info p {
+  margin: 0;
+  color: #e0e0e0;
+  font-weight: bold;
+}
+
+/* Analytics Table */
+.table-container {
+  background: #181818;
+  border-radius: 10px;
+  padding: 25px;
+  border: 1px solid #282828;
+}
+
+.table-container h2 {
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.analytics-table th {
+  color: #b3b3b3;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #282828;
+}
+
+.analytics-table td {
+  padding: 15px 0;
+  border-bottom: 1px solid #282828;
+  color: #e0e0e0;
+  vertical-align: middle;
+}
+
+.analytics-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.analytics-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Table Cells */
+.track-cell {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.table-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  background: #333;
+  color: #b3b3b3;
+}
+
+.status-badge.public {
+  background: rgba(29, 185, 84, 0.2);
+  color: #1DB954;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.font-bold {
+  font-weight: bold;
+  color: white !important;
+  font-size: 1.1rem;
+}
+
+/* 🌟 NEW: Header layout and Back Button Styles */
+.flex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.back-btn {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: white;
+  color: black;
+}

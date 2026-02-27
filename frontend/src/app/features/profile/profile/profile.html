@@ -1,0 +1,80 @@
+<div class="profile-container">
+  
+  <header class="dashboard-header">
+    <div>
+      <h1>My Profile </h1>
+      <p class="subtitle">Manage your account and view your stats</p>
+    </div>
+    <div class="header-actions">
+      <button routerLink="/home" class="back-btn">Back to Home</button>
+    </div>
+  </header>
+
+  <div class="profile-content" *ngIf="userProfile && userStats">
+    
+    <div class="profile-card">
+      <div class="avatar-circle">{{ userProfile.name.charAt(0).toUpperCase() }}</div>
+      
+      <div class="info-section">
+        <label>Display Name</label>
+        
+        <div *ngIf="!isEditing" class="display-row">
+          <h2>{{ userProfile.name }}</h2>
+          <button (click)="isEditing = true" class="edit-btn" title="Edit Name">✏️</button>
+        </div>
+        
+        <div *ngIf="isEditing" class="edit-row">
+          <input type="text" [(ngModel)]="newName" class="form-control" placeholder="Enter new name">
+          <button (click)="updateName()" class="save-btn">Save</button>
+          <button (click)="isEditing = false" class="cancel-btn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="account-details">
+        <div class="detail-item">
+          <span class="label">Email Address</span>
+          <span class="value">{{ userProfile.email }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Account Type</span>
+          <span class="badge">{{ userProfile.role }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Member Since</span>
+          <span class="value">{{ userProfile.createdAt | date:'mediumDate' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <h3>Your Music Stats </h3>
+      
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-icon">🎧</div>
+          <div class="stat-info">
+            <h4>{{ userStats.totalPlaylists }}</h4>
+            <p>Playlists Created</p>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-icon">❤️</div>
+          <div class="stat-info">
+            <h4>{{ userStats.favoriteSongsCount }}</h4>
+            <p>Favorite Songs</p>
+          </div>
+        </div>
+
+        <div class="stat-box highlight-box" *ngIf="userProfile.role === 'ARTIST'">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-info">
+            <h4>{{ userProfile.totalPlays | number }}</h4>
+            <p>Total Song Plays</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

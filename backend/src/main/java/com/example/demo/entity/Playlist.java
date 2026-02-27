@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "playlists")
@@ -27,9 +29,17 @@ public class Playlist {
     @Column(name = "cover_image_url")
     private String coverImageUrl;
 
+    @ManyToMany
+    @JoinTable(
+            name = "playlist_songs",
+            joinColumns = @JoinColumn(name = "playlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "song_id")
+    )
+    private List<Song> songs = new ArrayList<>();
+
     public Playlist() {}
 
-    // --- Getters and Setters ---
+    // --- Existing Getters and Setters ---
     public Long getPlaylistId() { return playlistId; }
     public void setPlaylistId(Long playlistId) { this.playlistId = playlistId; }
 
@@ -47,4 +57,16 @@ public class Playlist {
 
     public String getCoverImageUrl() { return coverImageUrl; }
     public void setCoverImageUrl(String coverImageUrl) { this.coverImageUrl = coverImageUrl; }
+
+    // --- Getters, Setters, and Helpers for Songs ---
+    public List<Song> getSongs() { return songs; }
+    public void setSongs(List<Song> songs) { this.songs = songs; }
+
+    public void addSong(Song song) {
+        this.songs.add(song);
+    }
+
+    public void removeSong(Song song) {
+        this.songs.remove(song);
+    }
 }

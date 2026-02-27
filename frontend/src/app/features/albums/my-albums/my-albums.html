@@ -1,0 +1,66 @@
+<div class="albums-container">
+  
+  <header class="page-header">
+    <div class="header-left">
+      <button routerLink="/home" class="back-btn">← Home</button>
+      <h1>My Albums</h1>
+    </div>
+    <button class="create-btn" (click)="openCreateModal()">+ Create Album</button>
+  </header>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Loading your albums...</p>
+  </div>
+
+  <div *ngIf="!isLoading && albums.length === 0" class="empty-state">
+    <p>You haven't created any albums yet. Click the button above to start building your discography!</p>
+  </div>
+
+  <div class="album-grid" *ngIf="albums.length > 0">
+    
+    <div class="album-card" *ngFor="let album of albums" (click)="goToAlbumDetails(album)">
+      
+      <div class="album-art-container">
+        <img *ngIf="album.coverImageUrl" 
+             [src]="getCoverImageUrl(album.coverImageUrl)" 
+             (error)="onImageError($event)" 
+             alt="Album Cover" class="album-art">
+             
+        <div *ngIf="!album.coverImageUrl" class="placeholder-art">💿</div>
+        
+        <div class="overlay-icon">⚙️ Manage</div>
+      </div>
+
+      <h3 class="album-title">{{ album.title }}</h3>
+      <p class="album-year">{{ album.releaseYear || 'Unknown Year' }}</p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showCreateModal">
+    <div class="modal-content">
+      <h2>Create New Album</h2>
+      <p class="modal-subtitle">Give your new project a name.</p>
+      
+      <div class="form-group">
+        <label>Album Title</label>
+        <input type="text" [(ngModel)]="newAlbum.title" placeholder="e.g., Summer Vibes EP" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label>Release Year</label>
+        <input type="number" [(ngModel)]="newAlbum.releaseYear" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label>Cover Art (Optional)</label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-input" style="padding: 7px;">
+      </div>
+
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="closeCreateModal()">Cancel</button>
+        <button class="save-btn" (click)="createAlbum()" [disabled]="!newAlbum.title">Create</button>
+      </div>
+    </div>
+  </div>
+
+</div>
