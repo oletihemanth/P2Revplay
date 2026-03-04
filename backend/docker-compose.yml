@@ -1,0 +1,31 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_DATABASE: revplay_db
+      MYSQL_ROOT_PASSWORD: Hemanth@2002
+    # 🛑 Notice I completely removed the 'ports' section from here!
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pHemanth@2002"]
+      timeout: 10s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: spring-backend
+    restart: on-failure
+    ports:
+      - "8080:8080"  # We still need this one so your browser can see Spring Boot!
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/revplay_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Hemanth@2002
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:
