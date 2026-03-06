@@ -14,7 +14,7 @@ RUN npm run build
 FROM nginx:alpine
 # Copy the built files from the previous stage to Nginx
 # Note: If your app name is different, you might need to change /app/dist/P2Revplay to match your actual build folder!
-COPY --from=build /app/dist/ /usr/share/nginx/html/
+COPY --from=build /app/dist/frontend/browser/ /usr/share/nginx/html/
 
 # Expose port 80 for web traffic
 EXPOSE 80
