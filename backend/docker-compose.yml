@@ -27,5 +27,14 @@ services:
       db:
         condition: service_healthy
 
+  # 👇 THIS IS YOUR BRAND NEW FRONTEND SECTION 👇
+  frontend:
+    build: ../frontend
+    container_name: angular-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
 volumes:
   db_data:
