@@ -13,11 +13,12 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") //  Applies to ALL endpoints (/api/auth, /api/songs, etc.)
-                        .allowedOrigins("http://localhost:4200") //  Your Angular app URL
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") //  Allowed request types
-                        .allowedHeaders("*") //  Allows all headers (Crucial for your JWT 'Authorization' header!)
-                        .allowCredentials(true); //  Allows credentials/tokens to be sent
+                registry.addMapping("/**")
+                        // 👇 Add your AWS Public IP right here! (No trailing slash)
+                        .allowedOrigins("http://localhost:4200", "http://13.61.142.87")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
